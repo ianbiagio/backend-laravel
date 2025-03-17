@@ -73,7 +73,7 @@ class CategoriaProdutoController extends Controller
 
         try {
             $categoria_produto = CategoriaProduto::findOrFail($id);
-            $categoria_produto->update($request->only(['nome_categoria']));
+            $categoria_produto->update($request->only(['nomeCategoria']));
 
             return response()->json($categoria_produto, 200);
         } catch (\Exception $e) {
