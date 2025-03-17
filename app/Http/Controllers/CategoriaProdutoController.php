@@ -27,7 +27,7 @@ class CategoriaProdutoController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nome_categoria' => 'required|string|max:150',
+            'nomeCategoria' => 'required|string|max:150',
         ]);
 
         if ($validator->fails()) {
@@ -36,7 +36,7 @@ class CategoriaProdutoController extends Controller
 
         try {
             $categoria_produto = CategoriaProduto::create([
-                'nome_categoria' => $request->nome_categoria
+                'nome_categoria' => $request->nomeCategoria
             ]);
 
             return response()->json($categoria_produto, 201);

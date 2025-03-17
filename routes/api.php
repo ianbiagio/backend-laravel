@@ -17,5 +17,5 @@ Route::middleware('auth:api')->get('auth', [AuthController::class, 'auth']);
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('produtos', ProdutoController::class);
-    Route::resource('categorias_produtos', CategoriaProdutoController::class);
+    Route::apiResource('categorias_produtos', CategoriaProdutoController::class);
 });
