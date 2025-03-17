@@ -64,7 +64,7 @@ class CategoriaProdutoController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'nome_categoria' => 'required|string|max:150',
+            'nomeCategoria' => 'required|string|max:150',
         ]);
 
         if ($validator->fails()) {
