@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\CategoriaProduto;
+use App\Models\Produto;
 use Illuminate\Support\Facades\Validator;
 
 class CategoriaProdutoController extends Controller
@@ -39,7 +40,8 @@ class CategoriaProdutoController extends Controller
                 'nome_categoria' => $request->nomeCategoria
             ]);
 
-            return response()->json($categoria_produto, 201);
+            $categorias_produtos = CategoriaProduto::all();
+            return response()->json($categorias_produtos, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'erro ao criar categoria de produto'], 500);
         }
@@ -73,11 +75,12 @@ class CategoriaProdutoController extends Controller
 
         try {
             $categoria_produto = CategoriaProduto::findOrFail($id);
-            $categoria_produto->update($request->only(['nomeCategoria']));
+            $categoria_produto->update(['nome_categoria' => $request->input('nomeCategoria')]);
 
-            return response()->json($categoria_produto, 200);
+            $categorias_produtos = CategoriaProduto::all();
+            return response()->json($categorias_produtos, 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'erro ao atualizar categoria do produto'], 500);
+            return response()->json(['error' =>$e], 500);
         }
     }
 
@@ -87,12 +90,23 @@ class CategoriaProdutoController extends Controller
     public function destroy(string $id)
     {
         try {
-            $categoria_produto = CategoriaProduto::findOrFail($id);
-            $categoria_produto->delete();
+            $categoria_produto = CategoriaProduto::find($id);
+            if (!$categoria_produto) {
+                return response()->json(['error' => 'Categoria não encontrada.'], 404);
+            }
+    
+            if (Produto::where('id_categoria_produto', $id)->exists()) {
+                return response()->json(['error' => 'Não é possível excluir esta categoria, pois existem produtos vinculados.'], 400);
+            }
 
-            return response()->json(['message' => 'categoria de produto deletada com sucesso'], 200);
+            $categoria_produto->delete();
+    
+            $categorias_produtos = CategoriaProduto::all();
+            return response()->json($categorias_produtos, 200);
+
         } catch (\Exception $e) {
-            return response()->json(['error' => 'erro ao deletar categoria de produto'], 500);
+            return response()->json(['error' => 'Erro interno: ' . $e->getMessage()], 500);
         }
     }
+    
 }
